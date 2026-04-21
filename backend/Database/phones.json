@@ -1,0 +1,107 @@
+[
+    {
+        "id": "item_001",
+        "product_name": "apple-iphone-15-pro",
+        "brand": "Apple",
+        "model": "iPhone 15 Pro",
+        "releaseYear": 2023,
+        "price": 999,
+        "currency": "USD",
+        "specs": {
+        "display": "6.1-inch Super Retina XDR OLED",
+        "processor": "A17 Pro",
+        "ram": 8,
+        "storage": 256,
+        "camera": 48,
+        "battery": 3274
+        },
+        "options": ["Black Titanium", "Blue Titanium", "White Titanium"],
+        "inStock": true,
+        "rating": 4.8,
+        "createdAt": "2026-04-14T10:00:00Z"
+    },
+    {
+        "id": "item_002",
+        "product_name": "samsung-galaxy-s24-ultra",
+        "brand": "Samsung",
+        "model": "Galaxy S24 Ultra",
+        "releaseYear": 2024,
+        "price": 1199,
+        "currency": "USD",
+        "specs": {
+        "display": "6.8-inch Dynamic AMOLED 2X",
+        "processor": "Snapdragon 8 Gen 3",
+        "ram": 12,
+        "storage": 512,
+        "camera": 200,
+        "battery": 5000
+        },
+        "options": ["Titanium Black", "Titanium Gray", "Titanium Violet"],
+        "inStock": true,
+        "rating": 4.7,
+        "createdAt": "2026-04-14T10:05:00Z"
+    },
+    {
+        "id": "item_003",
+        "product_name": "google-pixel-8-pro",
+        "brand": "Google",
+        "model": "Pixel 8 Pro",
+        "releaseYear": 2023,
+        "price": 899,
+        "currency": "USD",
+        "specs": {
+        "display": "6.7-inch LTPO OLED",
+        "processor": "Google Tensor G3",
+        "ram": 12,
+        "storage": 256,
+        "camera": 50,
+        "battery": 5050
+        },
+        "options": ["Obsidian", "Porcelain", "Bay"],
+        "inStock": true,
+        "rating": 4.6,
+        "createdAt": "2026-04-14T10:10:00Z"
+    },
+    {
+        "id": "item_004",
+        "product_name": "oneplus-12",
+        "brand": "OnePlus",
+        "model": "OnePlus 12",
+        "releaseYear": 2024,
+        "price": 799,
+        "currency": "USD",
+        "specs": {
+        "display": "6.82-inch AMOLED",
+        "processor": "Snapdragon 8 Gen 3",
+        "ram": 16,
+        "storage": 512,
+        "camera": 50,
+        "battery": 5400
+        },
+        "options": ["Silky Black", "Flowy Emerald"],
+        "inStock": true,
+        "rating": 4.5,
+        "createdAt": "2026-04-14T10:15:00Z"
+    },
+    {
+        "id": "item_005",
+        "product_name": "xiaomi-14-pro",
+        "brand": "Xiaomi",
+        "model": "14 Pro",
+        "releaseYear": 2024,
+        "price": 899,
+        "currency": "USD",
+        "specs": {
+        "display": "6.73-inch AMOLED",
+        "processor": "Snapdragon 8 Gen 3",
+        "ram": 12,
+        "storage": 256,
+        "camera": 50,
+        "battery": 4880
+        },
+        "options": ["Black", "White", "Rock Green"],
+        "inStock": false,
+        "rating": 4.4,
+        "createdAt": "2026-04-14T10:20:00Z"
+    }
+]
