@@ -1,9 +1,23 @@
-const express = require('express');
+const express = require("express");
+const router = express.Router();
 
-const phoneRouter = express.Router();
+const {
+    getAllPhones,
+    getPhoneByID,
+    addPhone,
+    updatePhone,
+    deletePhone
+} = require("../controllers/phone.controller");
 
-// GET /api/phones
-phoneRouter.route("/")
-    .get()
+router
+    .route("/")
+    .get(getAllPhones)
+    .post(addPhone);
 
-module.exports = phoneRouter;
+router
+    .route("/:id")
+    .get(getPhoneByID)
+    .put(updatePhone)
+    .delete(deletePhone);
+
+module.exports = router;
