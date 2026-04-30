@@ -3,9 +3,12 @@ const dotenv = require('dotenv');
 dotenv.config();
 const morgan = require('morgan');
 const phoneRoutes = require("./routers/phone.route")
+const authRoutes = require("./routers/users.route")
 const GlobalErrorHandler = require("./controllers/error.controller");
 const mongoose = require('mongoose');
 const app = express()
+
+
 
 // Middleware
 app.use(express.json());
@@ -17,7 +20,7 @@ app.get("/api/status", (req, res) => {
 })
 
 app.use("/api/phones", phoneRoutes);
-
+app.use("/api/auth", authRoutes)
 
 app.use(GlobalErrorHandler)
 
