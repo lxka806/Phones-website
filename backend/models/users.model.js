@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 const validator =  require("validator");
+const bcrypt = require("bcrypt");
+const crypto = require("crypto");
 
 const usersSchema = new mongoose.Schema(
-    {
+ {
         fullname: {
             type: String,
             required: [true, "Fullname is required"],
@@ -41,6 +43,18 @@ const usersSchema = new mongoose.Schema(
         timestamps: true
     }
 );
+
+
+usersSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;
+    this.password = await bcrypt.hash(this.password, 10);
+})
+usersSchema.methods.createEmailVerificationCode = function () {
+    const code = crypto.randomBytes(32).toString("hex");
+    this.verificationCode = code;
+    return code;
+};
+
 
 const Users = mongoose.model("Users", usersSchema);
 
