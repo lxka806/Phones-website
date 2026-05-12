@@ -3,6 +3,29 @@ const AppError = require("../utils/AppError");
 const User = require("../models/users.model")
 const sendEmail = require("../utils/email");
 
+
+const createSendToken = (user, statusCode, res, options) => {
+    const token = user.signToken()
+
+    const cookieOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+        maxAge: process.env.COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    }
+
+    user.password = undefined
+
+    const response = res.cookie("lg", token, cookieOptions)
+
+    if (options && options.redirectURL) {
+        return response.redirect(options.redirectURL || 302, options.redirectURL)
+    }
+
+    return response.status(statusCode).json(user)
+}
+
+
 const signup = catchAsync(async (req, res, next) => {
     const { fullname, email, password } = req.body
     
@@ -271,7 +294,41 @@ const verifyEmail = catchAsync(async (req, res, next) => {
     res.status(200).json({ message: "Email verified successfully! You can now log in." })
 })
 
+
+const login = catchAsync(async (req, res, next) => {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email }).select("+password");
+    if (!user) {
+        return next(new AppError("Invalid email or password", 401));
+    }
+
+    if (!user.isVerified) {
+        return next(new AppError("Please verify your email before logging in", 401));
+    }
+
+    const isValidPassword = await user.comparePassword(password);
+    if (!isValidPassword) {
+        return next(new AppError("Invalid email or password", 401));
+    }
+
+    createSendToken(user, 200, res)
+})
+
+const logout = catchAsync(async (req, res, next) => {
+    res.clearCookie("lg", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+        path: "/"
+    });
+
+    res.status(200).json({ message: "You have been logged out successfully." });
+});
+
 module.exports = {
     signup,
-    verifyEmail
+    verifyEmail,
+    login,
+    logout
 }

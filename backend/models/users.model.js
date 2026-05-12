@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const validator =  require("validator");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 
 const usersSchema = new mongoose.Schema(
  {
@@ -54,6 +55,14 @@ usersSchema.methods.createEmailVerificationCode = function () {
     this.verificationCode = code;
     return code;
 };
+usersSchema.methods.signToken = function () {
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_IN
+    });
+}
+usersSchema.methods.comparePassword = async function (password) {
+    return  await bcrypt.compare(password, this.password)
+}
 
 
 const Users = mongoose.model("Users", usersSchema);
