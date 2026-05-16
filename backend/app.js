@@ -2,7 +2,6 @@ const express = require('express');
 const dotenv = require('dotenv');
 dotenv.config();
 const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
 const phoneRoutes = require("./routers/phone.route")
 const authRoutes = require("./routers/users.route")
 const GlobalErrorHandler = require("./controllers/error.controller");
@@ -16,7 +15,6 @@ const app = express()
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan('dev'));
-app.use(cookieParser());
 
 // Routes
 app.get("/api/status", (req, res) => {

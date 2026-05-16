@@ -67,7 +67,17 @@ const phoneSchema = new mongoose.Schema({
         default: 0,
         min: 0,
         max: 5
-    }
+    },
+    images: [{
+        public_Id: {
+            type: String,
+            required: true
+        },
+        url: {
+            type: String,
+            required: true
+        }
+    }]
 }, { timestamps: true });
 
 module.exports = mongoose.model("Phone", phoneSchema);

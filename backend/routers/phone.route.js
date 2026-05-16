@@ -8,13 +8,21 @@ const {
     updatePhone,
     deletePhone
 } = require("../controllers/phone.controller");
-const { protect } = require('../middlewares/auth.middlewares')
-const { allowedTo } = require('../controllers/role.controller')
+
+const { protect } = require('../middlewares/auth.middlewares');
+const { allowedTo } = require('../controllers/role.controller');
+
+const upload = require("../middlewares/upload.middleware");
 
 router
     .route("/")
     .get(getAllPhones)
-    .post(protect, allowedTo('admin'), addPhone);
+    .post(
+        protect,
+        allowedTo('admin'),
+        upload.array("images"),
+        addPhone
+    );
 
 router
     .route("/:id")
