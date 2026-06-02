@@ -1,5 +1,8 @@
 const express = require("express");
-const router = express.Router();
+const upload = require("../config/multer");
+const { allowedTo } = require("../controllers/role.controller")
+const { protect } = require("../middlewares/auth.middlewares");
+
 
 const {
     getAllPhones,
@@ -9,25 +12,13 @@ const {
     deletePhone
 } = require("../controllers/phone.controller");
 
-const { protect } = require('../middlewares/auth.middlewares');
-const { allowedTo } = require('../controllers/role.controller');
+const router = express.Router();
 
-const upload = require("../middlewares/upload.middleware");
-
-router
-    .route("/")
-    .get(getAllPhones)
-    .post(
-        protect,
-        allowedTo('admin'),
-        upload.array("images"),
-        addPhone
-    );
-
-router
-    .route("/:id")
-    .get(getPhoneByID)
-    .put(protect, allowedTo('admin'), updatePhone)
-    .delete(protect, allowedTo('admin'), deletePhone);
+// SAME ENDPOINTS - just fixed to handle multiple images
+router.get("/", getAllPhones);
+router.get("/:id", getPhoneByID);
+router.post("/", protect, allowedTo("admin"), upload.array("images", 5), addPhone);
+router.put("/:id", protect, allowedTo("admin"), upload.array("images", 5), updatePhone);
+router.delete("/:id", protect, allowedTo("admin"), deletePhone);
 
 module.exports = router;

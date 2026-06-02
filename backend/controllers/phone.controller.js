@@ -29,53 +29,42 @@ const getPhoneByID = catchAsync(async (req, res, next) => {
     });
 });
 
-
-// CREATE
 // CREATE
 const addPhone = catchAsync(async (req, res, next) => {
-    // 1. Create the phone instance first
-    const newPhone = await Phone.create(req.body);
-    
-    // 2. Check if files were actually uploaded
-    if (req.files && req.files.length > 0) {
-        // Safe to map now
-        const images = req.files.map(file => file.path);
+    const body = req.body;
 
-        const result = await imageUpload("phones", images);
-
-        // Optional chaining (?.) protects against result.result being undefined
-        const imagesUrls = result?.result?.map(img => ({
-            public_Id: img.public_id,
-            url: img.secure_url
-        })) || [];
-
-        newPhone.images = imagesUrls;
-        await newPhone.save();
+    if (body.specs && typeof body.specs === "string") {
+        body.specs = JSON.parse(body.specs);
     }
 
-    res.status(201).json({
-        status: "success",
-        data: newPhone
-    });
+    const images = req.files.map(file => file.path);
+
+    const result = await imageUpload("phones", images);
+
+    const imageUrls = result.map(img => ({
+        url: img.secure_url,
+        public_Id: img.public_id
+    }));
+
+    body.images = imageUrls;
+
+    const newPhone = await Phone.create(body);
+
+    return res.status(200).json(newPhone);
 });
 
+// UPDATE
 const updatePhone = catchAsync(async (req, res, next) => {
-
-    const updatedPhone = await Phone.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true, runValidators: true }
-    );
-
+    const { id } = req.params;
+    
+    const updatedPhone = await Phone.findByIdAndUpdate(id, req.body, {new: true});
     if (!updatedPhone) {
-        return next(new AppError("Phone not found", 404));
+        return next(new AppError("Phone not found", 404))
     }
 
-    res.status(200).json({
-        status: "success",
-        data: updatedPhone
-    });
+    res.status(200).json(updatedPhone);
 });
+
 
 // DELETE
 const deletePhone = catchAsync(async (req, res, next) => {
@@ -83,11 +72,17 @@ const deletePhone = catchAsync(async (req, res, next) => {
 
     const deletedPhone = await Phone.findByIdAndDelete(id);
 
-    if (!deletedPhone) {
-        return next(new AppError("Phone not found", 404));
+    if (deletedPhone === null) {
+        return next(new AppError("Phone not found to delete!", 404));
     }
 
-    res.status(204).json({
+    const promises = deletedPhone.images.map(img =>
+        deleteImage(img.public_Id)
+    );
+
+    await Promise.all(promises);
+
+    return res.status(204).json({
         status: "success",
         data: null
     });

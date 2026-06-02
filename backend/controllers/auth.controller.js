@@ -5,18 +5,19 @@ const sendEmail = require("../utils/email");
 
 
 const createSendToken = (user, statusCode, res, options) => {
-    const token = user.signToken()
+    const token = user.signToken() // create token
 
-    const cookieOptions = {
+    const cookieOptions = { /// how browser stores the token
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-        maxAge: process.env.COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+        maxAge: process.env.COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000 /// cookie lifeTime 
     }
 
-    user.password = undefined
+    user.password = undefined /// remove password before sending user data 
 
-    const response = res.cookie("lg", token, cookieOptions)
+    const response = res.cookie("lg", token, cookieOptions) /// save token in to cookie 
+    // lg - cookie name
 
     if (options && options.redirectURL) {
         return response.redirect(options.redirectURL || 302, options.redirectURL)

@@ -1,4 +1,4 @@
-const cloudinary = require("cloudinary").v2
+const cloudinary = require("../config/cloudinary.js")
 
 const options = {
     use_filename: true,
@@ -12,15 +12,17 @@ const options = {
     ]
 };
 
-const imageUpload = async(folder, files) => {
-    try{
-        const uploadImage = await files.map(file => cloudinary.v2.uploader.upload(file, { ...options, folder }))
-        return { result: uploadImage }
-    }catch(e){
-        return { error: e.message }
-    }
-}
+const imageUpload = async (folder, files) => {
+    try {
+        const uploadedPromises = files.map(file => cloudinary.v2.uploader.upload(file, {...options, folder}));
 
+        const results = await Promise.all(uploadedPromises);
+
+        return results
+    } catch(err) {
+        return {message: "Error uploading image", error: err.message}
+    }
+};
 
 const deleteImage = async publicId => {
     try {
@@ -30,6 +32,7 @@ const deleteImage = async publicId => {
         return {message: "Error deleting image", error: err.message}
     }
 }
+
 
 module.exports = {
     imageUpload,
